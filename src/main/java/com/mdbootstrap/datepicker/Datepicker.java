@@ -11,31 +11,24 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class Datepicker {
 
+    private final SelenideElement selectDataButton = $x("//button[@data-mdb-toggle='datepicker']");
+    private final SelenideElement selectYearButton = $x("//button[@aria-label='Choose year and month']");
+    private final SelenideElement confirmButton = $x("//button[@class='datepicker-footer-btn datepicker-ok-btn']");
+    private final ElementsCollection years = $$x("//div[@class='datepicker-cell-content datepicker-large-cell-content']");
+    private final SelenideElement selectedDataField = $x("//section[@id='section-basic-example']//input[@id='exampleDatepicker1']");
+
+
     public void chooseDate(LocalDate date) {
-        openModalWindow();
-        pressYearButton();
+        selectDataButton.click();
+        selectYearButton.click();
         chooseYear(String.valueOf(date.getYear()));
         chooseMonth(date.format(DateTimeFormatter.ofPattern("MMM")));
         chooseDay(String.valueOf(date.getDayOfMonth()),date.format(DateTimeFormatter.ofPattern("MMM")));
-        pressOkButton();
-        $x("//section[@id='section-basic-example']//input[@id='exampleDatepicker1']")
-                .shouldHave(attribute("value", date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
-    }
-
-
-    private void openModalWindow() {
-        SelenideElement btn = $x("//button[@data-mdb-toggle='datepicker']");
-        btn.click();
-    }
-
-    private void pressYearButton() {
-        SelenideElement yearBtn = $x("//button[@aria-label='Choose year and month']");
-        yearBtn.click();
+        confirmButton.click();
+        selectedDataField.shouldHave(attribute("value", date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
     }
 
     private void chooseYear(String year) {
-        ElementsCollection years = $$x("//div[@class='datepicker-cell-content datepicker-large-cell-content']");
-
         boolean yearIsDisplayed = false;
         while (!yearIsDisplayed) {
             yearIsDisplayed = true;
@@ -58,9 +51,5 @@ public class Datepicker {
     private void chooseDay(String day, String month) {
         ElementsCollection days = $$x("//td[contains(@aria-label,'"+ month +"')]/div[@class='datepicker-cell-content datepicker-small-cell-content']");
         days.find(Condition.text(day)).click();
-    }
-
-    private void pressOkButton() {
-        $x("//button[@class='datepicker-footer-btn datepicker-ok-btn']").click();
     }
 }
