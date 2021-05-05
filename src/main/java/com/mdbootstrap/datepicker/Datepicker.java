@@ -20,7 +20,6 @@ public class Datepicker {
 
     public void chooseDate(LocalDate date) {
         selectDataButton.click();
-        selectYearButton.click();
         chooseYear(String.valueOf(date.getYear()));
         chooseMonth(date.format(DateTimeFormatter.ofPattern("MMM")));
         chooseDay(String.valueOf(date.getDayOfMonth()),date.format(DateTimeFormatter.ofPattern("MMM")));
@@ -29,6 +28,7 @@ public class Datepicker {
     }
 
     private void chooseYear(String year) {
+        selectYearButton.click();
         boolean yearIsDisplayed = false;
         while (!yearIsDisplayed) {
             yearIsDisplayed = true;
